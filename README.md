@@ -19,3 +19,6 @@ arkitehtin lause []
 - How to recognize bad unrealistic jobposts?
 - How to give realistic jobposts with given input parameters?
 
+### Visualizing
+- Will be based on the chosen ml methods
+- If we go for example with clustering those could be visualized?
