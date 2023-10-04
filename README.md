@@ -43,4 +43,8 @@ Arkitehdin lause []
 - After successfully classifying the jobs, we can use clustering to group job titles into similar buckets, for example, using k-means clustering.
 - Then, we would have buckets of similarly named jobs that we can organize to present the most realistic ones from each group.
 
+#### Scraper
+- Is still failing sometimes with employment types as you can see with example csv
+- Might need adjusts time to time
+
 ## Feel free to refine this plan and come up with ideas to make it even better.
