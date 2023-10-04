@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
+import csv
 
 def get_user_input():
     search_for = input('Enter the keyword to search for jobs: ')
@@ -8,17 +9,26 @@ def get_user_input():
 
 def scrape_job_ids(keyword):
     job_ids = []
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    }
     base_url = 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords={}&location=Helsinki%2C%20Uusimaa%2C%20Finland&geoId=106591199&f_E=2&start={}'
     # hardcoded 5 page max
     for page_number in range(5):
         url = base_url.format(keyword, page_number * 25)
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.text, 'html.parser')
         job_cards = soup.find_all("li")
         for card in job_cards:
-            job_id = card.find("div", {"class": "base-card"}).get('data-entity-urn').split(":")[3]
-            job_ids.append(job_id)
+            job_id_element = card.find("div", {"class": "base-card"})
+            if job_id_element and 'data-entity-urn' in job_id_element.attrs:
+                job_entity_urn = job_id_element['data-entity-urn']
+                job_id = job_entity_urn.split(":")[3]
+                job_ids.append(job_id)
+            else:
+                print("Job ID element or data-entity-urn attribute not found for this card.")
     return job_ids
+
 
 def scrape_job_details(job_ids):
     jobs = []
@@ -57,7 +67,7 @@ def scrape_job_details(job_ids):
 
 def save_to_csv(data):
     df = pd.DataFrame(data)
-    df.to_csv('wantedjobs.csv', index=False, encoding='utf-8')
+    df.to_csv('wantedjobs.csv', index=False, encoding='utf-8', quoting=csv.QUOTE_ALL)
 
 if __name__ == "__main__":
     keyword = get_user_input()
