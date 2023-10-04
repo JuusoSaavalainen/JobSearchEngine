@@ -10,6 +10,7 @@ Arkitehdin lause []
 ## How should we do it?
 - We should try to separate each part of this plan into its own modules.
 - We should inform others that we are working, for example, in data cleaning to avoid conflicts.
+- We should inform others about problems and progress that rise to keep everyone up to date 
 
 ## PLAN / TODO 
 
