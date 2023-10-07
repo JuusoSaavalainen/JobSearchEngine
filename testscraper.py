@@ -6,6 +6,7 @@ import asyncio
 import aiohttp
 import time
 
+
 def get_user_input():
     search_for = input('Enter the keyword to search for jobs: ')
     return search_for
@@ -97,8 +98,8 @@ def search_jobs(*keywords: str) -> pd.DataFrame:
     job_ids = asyncio.run(scrape_job_ids(list(keywords)))
 
     job_details = scrape_job_details(job_ids)
-
     return pd.DataFrame(job_details)
+
 
 if __name__ == "__main__":
     job_details = search_jobs(
