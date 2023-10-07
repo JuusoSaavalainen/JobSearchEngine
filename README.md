@@ -63,7 +63,7 @@ The purpose of this guide is to help you understand how to use Pipenv in a Pytho
 If you don't have Pipenv installed, you'll need to install it first. 
 
 **Terminal Command**:
-```bash
+```
 pip install pipenv
 ```
 
@@ -78,7 +78,7 @@ Use the terminal to navigate to the directory where your project resides.
 Run the following command to create a new virtual environment:
 
 **Terminal Command**:
-```bash
+```
 pipenv --python 3.10
 ```
 
@@ -91,7 +91,7 @@ pipenv --python 3.10
 If your project includes a `requirements.txt` file, you can use Pipenv to install all the dependencies listed in it.
 
 **Terminal Command**:
-```bash
+```
 pipenv install -r path/to/requirements.txt
 ```
 
@@ -108,17 +108,17 @@ Once you've installed packages via `requirements.txt`, Pipenv generates a `Pipfi
 Here are some common commands to manage packages:
 
 - **To install a package**:  
-  ```bash
+  ```
   pipenv install package_name
   ```
   
 - **To uninstall a package**:  
-  ```bash
+  ```
   pipenv uninstall package_name
   ```
   
 - **To update a package**:  
-  ```bash
+  ```
   pipenv update package_name
   ```
 
