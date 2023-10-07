@@ -88,7 +88,7 @@ pipenv --python 3.10
 
 ### Install Packages from `requirements.txt`
 
-If your project includes a `requirements.txt` file, you can use Pipenv to install all the dependencies listed in it.
+You can use `requirements.txt` file Pipenv to install all the dependencies listed in it.
 
 **Terminal Command**:
 ```
