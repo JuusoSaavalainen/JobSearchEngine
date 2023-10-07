@@ -3,7 +3,6 @@ Introduction to Data Science miniproject !
 Epsilon-Delta 
 Arkitehdin lause []
 
-
 ## What are we doing?
 - Filtering realistic job posts for entry-level tech jobs.
 
@@ -48,3 +47,79 @@ Arkitehdin lause []
 - Might need adjusts time to time
 
 ## Feel free to refine this plan and come up with ideas to make it even better.
+
+
+# Comprehensive Guide: Using `requirements.txt` with Pipenv in Python
+
+## Overview
+The purpose of this guide is to help you understand how to use Pipenv in a Python project that currently relies on a `requirements.txt` file for dependency management. This will cover how to install Pipenv, initialize a virtual environment, import dependencies, and manage your project effectively.
+
+---
+
+## Installation of Pipenv
+
+### Install Pipenv
+
+If you don't have Pipenv installed, you'll need to install it first. 
+
+**Terminal Command**:
+\```bash
+pip install pipenv
+\```
+
+---
+
+### Navigate to Project Directory
+
+Use the terminal to navigate to the directory where your project resides.
+
+### Initialize Virtual Environment
+
+Run the following command to create a new virtual environment:
+
+**Terminal Command**:
+\```bash
+pipenv --python 3.10
+\```
+
+---
+
+## Importing Dependencies
+
+### Install Packages from `requirements.txt`
+
+If your project includes a `requirements.txt` file, you can use Pipenv to install all the dependencies listed in it.
+
+**Terminal Command**:
+\```bash
+pipenv install -r path/to/requirements.txt
+\```
+
+---
+
+##  Pipfile and Dependency Management
+
+### Understand the Pipfile
+
+Once you've installed packages via `requirements.txt`, Pipenv generates a `Pipfile` to manage dependencies more effectively. This `Pipfile` can eventually replace `requirements.txt`.
+
+### Managing Individual Packages
+
+Here are some common commands to manage packages:
+
+- **To install a package**:  
+  \```bash
+  pipenv install package_name
+  \```
+  
+- **To uninstall a package**:  
+  \```bash
+  pipenv uninstall package_name
+  \```
+  
+- **To update a package**:  
+  \```bash
+  pipenv update package_name
+  \```
+
+---

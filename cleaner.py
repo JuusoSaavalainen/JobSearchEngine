@@ -33,7 +33,7 @@ def stem_description(description):
     return description
 
 
-def vectorize_description(description):
+def vectorize_description(description) -> spmatrix:
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform(description)
     return tfidf_matrix
