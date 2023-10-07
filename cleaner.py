@@ -3,6 +3,7 @@ import string
 from nltk.stem.snowball import SnowballStemmer
 import pandas as pd
 from langdetect import detect
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def get_jobs(keywords:list):
@@ -20,6 +21,7 @@ def description_remove_stopwords(description):
     description = description.apply(lambda text: " ".join([word for word in text.split() if word not in stopwords_list]))
     return description
 
+
 def stem_text(text):
     lang = detect(text)
     stemmer = SnowballStemmer(lang if lang in SnowballStemmer.languages else "english")
@@ -31,11 +33,18 @@ def stem_description(description):
     return description
 
 
+def vectorize_description(description):
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(description)
+    return tfidf_matrix
+
+
 def clean_description(df):
     description = df["description"]
     description_no_stopwords = description_remove_stopwords(description)
     stemmed_description = stem_description(description_no_stopwords)
     return stemmed_description
+
 
 
 def clean_via_search(keywords):
@@ -52,7 +61,8 @@ def clean_via_csv():
     df["description"] = description
     print(description)
     print(df)
-    
+
+
 
 if __name__ == "__main__":
     clean_via_csv()

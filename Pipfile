@@ -10,6 +10,7 @@ pandas = "*"
 requests = "*"
 aiohttp = "*"
 nltk = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
