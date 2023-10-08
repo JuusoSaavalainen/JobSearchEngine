@@ -30,6 +30,7 @@ Arkitehdin lause []
 - If we cannot achieve good results with any automatic labeling techniques, we must explore non-label approaches.
 - The internet offers numerous methods for labeling in situations like ours, so feel free to explore different approaches.
 - We don't have the time to label manually.
+  
 
 ### Machine Learning
 - After __labeling__ the descriptions, we can apply various methods to classify the jobs.
@@ -37,6 +38,7 @@ Arkitehdin lause []
 - For example, a simple regression model could be a good choice, or we can try decision trees or other algorithms.
 - In the best-case scenario, we would have a numerical representation of how realistic a job is based on the description.
 - Most of the classification approaches provide such outcomes.
+- If not we can try different clustering methods to find good posts without labelling ?
 
 ### Visualizing
 - After successfully classifying the jobs, we can use clustering to group job titles into similar buckets, for example, using k-means clustering.
