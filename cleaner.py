@@ -4,7 +4,7 @@ from nltk.stem.snowball import SnowballStemmer
 import pandas as pd
 from langdetect import detect
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+from scipy.sparse import spmatrix
 
 def get_jobs(keywords:list):
     df = search_jobs(keywords)
