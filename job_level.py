@@ -34,7 +34,8 @@ def calculate_entry_levelness(text):
 def level_score(clean_data: pd.DataFrame) -> list:
     """Compute 'entry levelness' scores for each job post in raw_data"""
     clean_data['entry_level_score'] = clean_data['description'].apply(calculate_entry_levelness)
-    return clean_data
+    sorted_df = clean_data.sort_values(by='entry_level_score', ascending=False)
+    return sorted_df
 
 
 if __name__ == "__main__":
