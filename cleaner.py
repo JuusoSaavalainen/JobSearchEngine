@@ -1,17 +1,11 @@
-from testscraper import search_jobs
 import string
 from nltk.stem.snowball import SnowballStemmer
 import pandas as pd
 from langdetect import detect
 from sklearn.feature_extraction.text import TfidfVectorizer
-from scipy.sparse import spmatrix
-
-def get_jobs(keywords:list):
-    df = search_jobs(keywords)
-    return df
 
 
-def description_remove_stopwords(description):
+def description_remove_stopwords(description: pd.DataFrame):
     description = description.str.lower()
     stopwords = open("stopwords.txt", "r")
     data = stopwords.read()
@@ -28,41 +22,36 @@ def stem_text(text):
     return " ".join([stemmer.stem(word) for word in text.split()])
 
 
-def stem_description(description):
+def stem_description(description: pd.DataFrame):
     description = description.apply(stem_text) 
     return description
 
 
-def vectorize_description(description) -> spmatrix:
+def vectorize_description(description: pd.DataFrame):
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform(description)
     return tfidf_matrix
 
-
+def tokenizer(description: pd.DataFrame):
+    description = description.apply(lambda x: x.split(" "))
+    return description
+    
 def clean_description(df):
     description = df["description"]
     description_no_stopwords = description_remove_stopwords(description)
     stemmed_description = stem_description(description_no_stopwords)
-    return stemmed_description
+    tokenized_description = tokenizer(stemmed_description)
+    df["description"] = tokenized_description
+    return df
 
 
-
-def clean_via_search(keywords):
-    df = get_jobs(list(keywords))
+def clean_df(df: pd.DataFrame):
+    """Return cleaned dataframe"""
     description = clean_description(df)
-    df["description"] = description
-    print(description)
-    print(df)
-    
-
-def clean_via_csv():
-    df = pd.read_csv("wantedjobs.csv")
-    description = clean_description(df)
-    df["description"] = description
-    print(description)
-    print(df)
+    return description
 
 
 
 if __name__ == "__main__":
-    clean_via_csv()
+    df = pd.read_csv("uniquejobs_clean.csv")
+    clean_df(df)

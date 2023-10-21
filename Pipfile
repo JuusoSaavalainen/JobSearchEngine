@@ -11,6 +11,7 @@ requests = "*"
 aiohttp = "*"
 nltk = "*"
 scikit-learn = "*"
+openai = "*"
 
 [dev-packages]
 
