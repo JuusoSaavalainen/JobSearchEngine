@@ -31,6 +31,7 @@ def is_realistic_entry_level(x):
     ]
 
     alarming_phrases = [
+        r"(Previous|Prior|Past)\s*experience\s*(as\s+a\s*)?(professional\s*)?developer\s*(for\s*)?(roughly|approximately|about|around)?\s*\d+\s*years\s*(or\s+more)?",
         r"senior\sfull\sstack\sdeveloper" r"senior",
         r"senior\sfull\sstack\sdeveloper\s-\spotential\sfuture\slead",
         r"Solid\sworking\sas\sBackend\sDeveloper\swith\sNode",
