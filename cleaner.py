@@ -11,8 +11,14 @@ def description_remove_stopwords(description: pd.DataFrame):
     data = stopwords.read()
     stopwords_list = data.split("\n")
     description.fillna("", inplace=True)
-    description = description.apply(lambda x: "".join([c for c in x if c not in string.punctuation]))
-    description = description.apply(lambda text: " ".join([word for word in text.split() if word not in stopwords_list]))
+    description = description.apply(
+        lambda x: "".join([c for c in x if c not in string.punctuation])
+    )
+    description = description.apply(
+        lambda text: " ".join(
+            [word for word in text.split() if word not in stopwords_list]
+        )
+    )
     return description
 
 
@@ -23,7 +29,7 @@ def stem_text(text):
 
 
 def stem_description(description: pd.DataFrame):
-    description = description.apply(stem_text) 
+    description = description.apply(stem_text)
     return description
 
 
@@ -32,10 +38,12 @@ def vectorize_description(description: pd.DataFrame):
     tfidf_matrix = vectorizer.fit_transform(description)
     return tfidf_matrix
 
+
 def tokenizer(description: pd.DataFrame):
     description = description.apply(lambda x: x.split(" "))
     return description
-    
+
+
 def clean_description(df):
     description = df["description"]
     description_no_stopwords = description_remove_stopwords(description)
@@ -45,11 +53,16 @@ def clean_description(df):
     return df
 
 
+def lower_df(df: pd.DataFrame):
+    description = df["description"]
+    description = description.str.lower()
+    return df
+
+
 def clean_df(df: pd.DataFrame):
     """Return cleaned dataframe"""
     description = clean_description(df)
     return description
-
 
 
 if __name__ == "__main__":
