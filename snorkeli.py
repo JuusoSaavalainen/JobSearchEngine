@@ -65,9 +65,9 @@ def label_dataframe(df: pd.DataFrame):
     applier = PandasLFApplier([is_realistic_entry_level])
     df = df.drop_duplicates(subset="description", keep='first')
     L_train = applier.apply(df)
-    df.loc[:,"label"] = L_train
-    df.loc[:,'custom_label'] = df.apply(lambda row: 1 if row['level'] in ['entry-level','Entry Level', 'internship', 'Not Applicable'] else 0, axis=1)
-    df.loc[:,'final_label'] = df.apply(lambda row: row['custom_label'] if row['custom_label'] == 1 else row['label'], axis=1)
+    df.loc[:,"description-label"] = L_train
+    df.loc[:,'level-label'] = df.apply(lambda row: 1 if row['level'] in ['entry-level','Entry Level', 'internship', 'Not Applicable'] else 0, axis=1)
+    df.loc[:,'label'] = df.apply(lambda row: row['level-label'] if row['level-label'] == 1 else row['description-label'], axis=1)
     return df
 
 
