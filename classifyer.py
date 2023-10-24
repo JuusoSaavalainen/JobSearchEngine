@@ -1,10 +1,9 @@
 import pandas as pd
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.model_selection import GridSearchCV
 from imblearn.over_sampling import SMOTE
 
 
