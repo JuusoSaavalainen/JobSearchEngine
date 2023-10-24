@@ -3,9 +3,11 @@ from nltk.stem.snowball import SnowballStemmer
 import pandas as pd
 from langdetect import detect
 from sklearn.feature_extraction.text import TfidfVectorizer
+from bs4 import BeautifulSoup
 
 
-def description_remove_stopwords(description: pd.DataFrame):
+def description_remove_stopwords(df: pd.DataFrame):
+    description = df["description"]
     description = description.str.lower()
     stopwords = open("stopwords.txt", "r")
     data = stopwords.read()
@@ -19,7 +21,7 @@ def description_remove_stopwords(description: pd.DataFrame):
             [word for word in text.split() if word not in stopwords_list]
         )
     )
-    return description
+    return df
 
 
 def stem_text(text):
@@ -28,23 +30,26 @@ def stem_text(text):
     return " ".join([stemmer.stem(word) for word in text.split()])
 
 
-def stem_description(description: pd.DataFrame):
+def stem_description(df: pd.DataFrame) -> pd.DataFrame:
+    description = df["description"]
     description = description.apply(stem_text)
-    return description
+    return df
 
 
-def vectorize_description(description: pd.DataFrame):
+def vectorize_description(df: pd.DataFrame) -> pd.DataFrame:
+    description = df["description"]
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform(description)
     return tfidf_matrix
 
 
-def tokenizer(description: pd.DataFrame):
+def tokenizer(df: pd.DataFrame) -> pd.DataFrame:
+    description = df["description"]
     description = description.apply(lambda x: x.split(" "))
-    return description
+    return df
 
 
-def clean_description(df):
+def clean_description(df: pd.DataFrame) -> pd.DataFrame:
     description = df["description"]
     description_no_stopwords = description_remove_stopwords(description)
     stemmed_description = stem_description(description_no_stopwords)
@@ -53,18 +58,34 @@ def clean_description(df):
     return df
 
 
-def lower_df(df: pd.DataFrame):
+def lower_description(df: pd.DataFrame) -> pd.DataFrame:
     description = df["description"]
     description = description.str.lower()
     return df
 
 
-def clean_df(df: pd.DataFrame):
-    """Return cleaned dataframe"""
-    description = clean_description(df)
-    return description
+def remove_html_tags(text):
+    try:
+        if pd.isna(text):
+            return text
+        return BeautifulSoup(str(text), 'html.parser').get_text()
+    except Exception as e:
+        print(f"An exception occurred: {e}")
+        return None
+    
+    
+def clean_html_tags_from_dataset(df: pd.DataFrame) -> pd.DataFrame:
+    df["description"] = df["description"].apply(remove_html_tags)
+    df.dropna(subset=['description'], inplace=True)
+    return df
+
+
+def read_csv_relevant_columns_inorder(csv_filename: str) -> pd.DataFrame:
+    df = pd.read_csv(csv_filename, usecols=['company', 'job-title', 'level', 'description', 'job-url'])
+    return df
 
 
 if __name__ == "__main__":
     df = pd.read_csv("uniquejobs_clean.csv")
-    clean_df(df)
+    clean_description(df)
+

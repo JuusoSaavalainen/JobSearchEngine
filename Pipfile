@@ -12,6 +12,7 @@ aiohttp = "*"
 nltk = "*"
 scikit-learn = "*"
 openai = "*"
+snorkel = "*"
 
 [dev-packages]
 
