@@ -4,7 +4,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, classification_report
+from sklearn.model_selection import GridSearchCV
 from imblearn.over_sampling import SMOTE
+
 
 data = pd.read_csv("labelled.csv")
 job_descriptions = data["description"]
@@ -16,8 +18,6 @@ X = tfidf_vectorizer.fit_transform(job_descriptions)
 # Oversampling to balance the dataset because 0 is much more common than 1. (0 being realistic and 1 being unrealistic)
 smote = SMOTE(sampling_strategy='minority', random_state=42)
 X_resampled, y_resampled = smote.fit_resample(X, labels)
-
-
 X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=40)
 
 # Hyperparameter tuning
@@ -31,7 +31,6 @@ param_grid = {
 model = GradientBoostingClassifier(random_state=42)
 
 # Grid search for hyperparameter tuning
-from sklearn.model_selection import GridSearchCV
 grid_search = GridSearchCV(model, param_grid, cv=3, n_jobs=-1)
 grid_search.fit(X_train, y_train)
 
