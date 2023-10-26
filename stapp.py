@@ -116,8 +116,10 @@ if __name__ == "__main__":
             for job in job_list:
                 st.subheader(job["job-title"])
                 st.write("URL:", job["URL"])
-                st.write("Most Likely Label:", job["Most Likely Label"])
-                st.write("Model Output:", job["Model Output"])
+                # If you want to see why it got trought the filter, uncomment these lines
+                # _________________________________________________________________
+                #st.write("Most Likely Label:", job["Most Likely Label"])
+                #st.write("Model Output:", job["Model Output"])
             if not job_list:
                 st.warning("No job descriptions found that don't require previous work experience.")
         else:
