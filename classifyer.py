@@ -9,7 +9,7 @@ from imblearn.over_sampling import SMOTE
 
 data = pd.read_csv("labelled.csv")
 job_descriptions = data["description"]
-labels = data["Label"]
+labels = data["label"]
 
 tfidf_vectorizer = TfidfVectorizer(max_features=1000)
 X = tfidf_vectorizer.fit_transform(job_descriptions)

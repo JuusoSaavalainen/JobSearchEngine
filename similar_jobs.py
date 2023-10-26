@@ -18,12 +18,3 @@ labels = clustering_model.labels_
 df['Cluster'] = labels
 
 
-def sort_all_jobs(df, cosine_sim):
-    sorted_jobs = {}
-    for idx, job in df.iterrows():
-        sim_scores = list(enumerate(cosine_sim[idx]))
-        sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-        sorted_jobs[job['job-title']] = [df.loc[i[0], 'job-title'] for i in sim_scores[1:]]
-    return sorted_jobs
-
-print(sort_all_jobs(df,cosine_sim))

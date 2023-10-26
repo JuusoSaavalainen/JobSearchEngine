@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup
-from sklearn.feature_extraction.text import TfidfVectorizer
-import pandas as pd
 import requests
-import joblib
 import streamlit as st
+import requests
+import os
 
 def get_user_input():
     search_for = input('Enter the keyword to search for jobs: ')
@@ -71,11 +70,13 @@ def scrape_job_details(job_ids):
             jobs.append(job)
     return jobs
 
-def make_predictions(model, job_descs):
-    tfidf_vectorizer = TfidfVectorizer(max_features=1000)
-    job_descs_tfidf = tfidf_vectorizer.fit_transform(job_descs)
-    predictions = model.predict(job_descs_tfidf)
-    return predictions
+API_KEY = "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"
+API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
+
+def query(payload):
+    headers = {"Authorization": f"Bearer {API_KEY}"}
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
 
 
 
@@ -98,9 +99,6 @@ def main():
 
     # User Input
     keyword = st.text_input("Enter the keyword to search for jobs:")
-
-    
-    # Action on button click
     if st.button("Search"):
 
         
@@ -109,30 +107,41 @@ def main():
 
         with st.spinner("Scraping the job descriptions..."):
             job_details = scrape_job_details(job_ids)
-
-        if job_details:
-            with st.spinner("Evaluating the data..."):
-                model = joblib.load("best_model.pkl")
-                job_descs = [job["description"] for job in job_details if "description" in job]
             
-            if job_descs:
-                predictions = make_predictions(model, job_descs)
-                
-                st.header(f"Found these (limit = 5) realistic entry-level jobs in Helsinki with keyword: {keyword}")
-                
-                # Displaying Jobs
-                printed_count = 0
-                for i in range(len(job_details)):
-                    if predictions[i] == 0:
-                        st.subheader(job_details[i]["job-title"])
-                        st.markdown(f"**URL:** [Link]({job_details[i]['job-url']})")
-                        printed_count += 1
-                    if printed_count == 5:
-                        break
+        with st.spinner("Evaluating the data..."):
+            if job_details:
+                job_list = []
+                for job in job_details:
+                    if "description" in job:
+                        description = job["description"]
+                        output = query({
+                            "inputs": description,
+                            "parameters": {"candidate_labels": ["requires job experience", "does not require previous experience"]}
+                        })
+                        if "labels" in output:
+                            most_likely_label = output["labels"][0]
+                        else:
+                            st.write(f"Unexpected keys in output: {output.keys()}")
+                        classification_output = output
+                        if most_likely_label == "does not require previous experience":
+                            job_list.append({
+                                "job-title": job["job-title"],
+                                "URL": job["job-url"],
+                                "Most Likely Label": most_likely_label,
+                                "Model Output": classification_output
+                            })
+                        if len(job_list) >= 5:
+                            break
+                st.header(f"Found these realistic entry-level jobs in Helsinki with keyword: {keyword}")
+                st.markdown("---")
+                for job in job_list:
+                    st.subheader(job["job-title"])
+                    st.write("URL:", job["URL"])
+                    st.markdown("---")
+                if not job_list:
+                    st.warning("No job descriptions found that don't require previous work experience.")
             else:
-                st.warning("No job descriptions found in the scraped data.")
-        else:
-            st.warning("No jobs found for the given keyword.")
+                st.warning("No jobs found for the given keyword.")
             
 if __name__ == "__main__":
     main()
