@@ -1,8 +1,5 @@
 from bs4 import BeautifulSoup
-from sklearn.feature_extraction.text import TfidfVectorizer
-import pandas as pd
 import requests
-import joblib
 import streamlit as st
 import requests
 import os
@@ -89,9 +86,9 @@ if __name__ == "__main__":
     if st.button("Search"):
         st.info("Searching for jobs...")
         job_ids = scrape_job_ids(keyword)
+        st.info(f"Found {len(job_ids)} jobs.")
         st.info("Scraping the descriptions...")
         job_details = scrape_job_details(job_ids)
-        st.info(f"Found {len(job_details)} jobs.")
         st.info("Evaluating the data...")
         if job_details:
             job_list = []
