@@ -1,9 +1,11 @@
 from bs4 import BeautifulSoup
 from sklearn.feature_extraction.text import TfidfVectorizer
+from transformers import pipeline, AutoTokenizer
 import pandas as pd
 import requests
 import joblib
 import streamlit as st
+
 
 def get_user_input():
     search_for = input('Enter the keyword to search for jobs: ')
@@ -77,39 +79,54 @@ def make_predictions(model, job_descs):
     predictions = model.predict(job_descs_tfidf)
     return predictions
 
-if __name__ == "__main__":
-    st.title("Job Search Engine")
 
-    # User input for job search keyword
+def classify_w_hugging(sequence_to_classify):
+    tokenizer = AutoTokenizer.from_pretrained("MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
+    classifier = pipeline("zero-shot-classification", model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli", tokenizer=tokenizer)
+    candidate_labels = ["requires previous work experience", "does not require previous work experience"]
+    output = classifier(sequence_to_classify, candidate_labels, multi_label=False)
+    
+    # Find the label with the highest score
+    max_score_index = output["scores"].index(max(output["scores"]))
+    most_likely_label = output["labels"][max_score_index]
+    
+    return most_likely_label, output
+
+if __name__ == "__main__":
+
+    st.title("Job Search Engine")
     keyword = st.text_input("Enter the keyword to search for jobs:")
 
     if st.button("Search"):
-        st.info("Searching for jobs...")
 
-        # Scrape job IDs and details
+        st.info("Searching for jobs...")
         job_ids = scrape_job_ids(keyword)
         st.info("Scraping the descriptions...")
         job_details = scrape_job_details(job_ids)
         st.info("Evaluating the data...")
+
         if job_details:
-            model = joblib.load("best_model.pkl")
-
-            # Extract job descriptions and make predictions
-            job_descs = [job["description"] for job in job_details if "description" in job]
-            if job_descs:
-                predictions = make_predictions(model, job_descs)
-
-                # Display the first 5 job titles and URLs for labeled 0
-                st.header(f"Found these (limit = 5) realistic entry level jobs in Helsinki with keyword: {keyword}")
-                printed_count = 0
-                for i in range(len(job_details)):
-                    if predictions[i] == 0:
-                        st.subheader(job_details[i]["job-title"])
-                        st.markdown(f"**URL:** [Link]({job_details[i]['job-url']})")
-                        printed_count += 1
-                    if printed_count == 5:
+            job_list = []
+            for job in job_details:
+                if "description" in job:
+                    description = job["description"]
+                    most_likely_label, classification_output = classify_w_hugging(description)
+                    if most_likely_label == "does not require previous work experience":
+                        job_list.append({
+                            "job-title": job["job-title"],
+                            "URL": job["job-url"],
+                            "Most Likely Label": most_likely_label,
+                            "Model Output": classification_output
+                        })
+                    if len(job_list) >= 5:
                         break
-            else:
-                st.warning("No job descriptions found in the scraped data.")
+            st.header(f"Found these realistic entry-level jobs in Helsinki with keyword: {keyword}")
+            for job in job_list:
+                st.subheader(job["job-title"])
+                st.write("URL:", job["URL"])
+                st.write("Most Likely Label:", job["Most Likely Label"])
+                st.write("Model Output:", job["Model Output"])
+            if not job_list:
+                st.warning("No job descriptions found that don't require previous work experience.")
         else:
             st.warning("No jobs found for the given keyword.")
