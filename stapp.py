@@ -6,7 +6,6 @@ import requests
 import joblib
 import streamlit as st
 
-
 def get_user_input():
     search_for = input('Enter the keyword to search for jobs: ')
     return search_for
@@ -79,32 +78,25 @@ def make_predictions(model, job_descs):
     predictions = model.predict(job_descs_tfidf)
     return predictions
 
-
 def classify_w_hugging(sequence_to_classify):
     tokenizer = AutoTokenizer.from_pretrained("MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
     classifier = pipeline("zero-shot-classification", model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli", tokenizer=tokenizer)
     candidate_labels = ["requires previous work experience", "does not require previous work experience"]
     output = classifier(sequence_to_classify, candidate_labels, multi_label=False)
-    
-    # Find the label with the highest score
     max_score_index = output["scores"].index(max(output["scores"]))
     most_likely_label = output["labels"][max_score_index]
-    
     return most_likely_label, output
 
 if __name__ == "__main__":
-
     st.title("Job Search Engine")
     keyword = st.text_input("Enter the keyword to search for jobs:")
 
     if st.button("Search"):
-
         st.info("Searching for jobs...")
         job_ids = scrape_job_ids(keyword)
         st.info("Scraping the descriptions...")
         job_details = scrape_job_details(job_ids)
         st.info("Evaluating the data...")
-
         if job_details:
             job_list = []
             for job in job_details:
