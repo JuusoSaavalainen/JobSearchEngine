@@ -77,30 +77,50 @@ def make_predictions(model, job_descs):
     predictions = model.predict(job_descs_tfidf)
     return predictions
 
-if __name__ == "__main__":
-    st.title("Job Search Engine")
 
-    # User input for job search keyword
+
+def main():
+        
+    # Add the background card
+    st.markdown("""
+        <style>
+            .reportview-container {
+                background-color: #f0f0f0; 
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>", unsafe_allow_html=True)
+
+
+    # User Input
     keyword = st.text_input("Enter the keyword to search for jobs:")
 
+    
+    # Action on button click
     if st.button("Search"):
-        st.info("Searching for jobs...")
 
-        # Scrape job IDs and details
-        job_ids = scrape_job_ids(keyword)
-        st.info("Scraping the descriptions...")
-        job_details = scrape_job_details(job_ids)
-        st.info("Evaluating the data...")
+        
+        with st.spinner("Searching for jobs..."):
+            job_ids = scrape_job_ids(keyword)
+
+        with st.spinner("Scraping the job descriptions..."):
+            job_details = scrape_job_details(job_ids)
+
         if job_details:
-            model = joblib.load("best_model.pkl")
-
-            # Extract job descriptions and make predictions
-            job_descs = [job["description"] for job in job_details if "description" in job]
+            with st.spinner("Evaluating the data..."):
+                model = joblib.load("best_model.pkl")
+                job_descs = [job["description"] for job in job_details if "description" in job]
+            
             if job_descs:
                 predictions = make_predictions(model, job_descs)
-
-                # Display the first 5 job titles and URLs for labeled 0
-                st.header(f"Found these (limit = 5) realistic entry level jobs in Helsinki with keyword: {keyword}")
+                
+                st.header(f"Found these (limit = 5) realistic entry-level jobs in Helsinki with keyword: {keyword}")
+                
+                # Displaying Jobs
                 printed_count = 0
                 for i in range(len(job_details)):
                     if predictions[i] == 0:
@@ -113,3 +133,6 @@ if __name__ == "__main__":
                 st.warning("No job descriptions found in the scraped data.")
         else:
             st.warning("No jobs found for the given keyword.")
+            
+if __name__ == "__main__":
+    main()

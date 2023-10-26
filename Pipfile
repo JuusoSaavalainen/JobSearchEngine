@@ -13,6 +13,7 @@ nltk = "*"
 scikit-learn = "*"
 openai = "*"
 snorkel = "*"
+streamlit = "*"
 
 [dev-packages]
 
