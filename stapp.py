@@ -1,10 +1,11 @@
 from bs4 import BeautifulSoup
 from sklearn.feature_extraction.text import TfidfVectorizer
-from transformers import pipeline, AutoTokenizer
 import pandas as pd
 import requests
 import joblib
 import streamlit as st
+import requests
+import os
 
 def get_user_input():
     search_for = input('Enter the keyword to search for jobs: ')
@@ -72,38 +73,38 @@ def scrape_job_details(job_ids):
             jobs.append(job)
     return jobs
 
-def make_predictions(model, job_descs):
-    tfidf_vectorizer = TfidfVectorizer(max_features=1000)
-    job_descs_tfidf = tfidf_vectorizer.fit_transform(job_descs)
-    predictions = model.predict(job_descs_tfidf)
-    return predictions
+API_KEY = os.environ.get('HUGGING_FACE_API_KEY')
+API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
 
-def classify_w_hugging(sequence_to_classify):
-    tokenizer = AutoTokenizer.from_pretrained("MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
-    classifier = pipeline("zero-shot-classification", model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli", tokenizer=tokenizer)
-    candidate_labels = ["requires previous work experience", "does not require previous work experience"]
-    output = classifier(sequence_to_classify, candidate_labels, multi_label=False)
-    max_score_index = output["scores"].index(max(output["scores"]))
-    most_likely_label = output["labels"][max_score_index]
-    return most_likely_label, output
+def query(payload):
+    headers = {"Authorization": f"Bearer {API_KEY}"}
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
 
 if __name__ == "__main__":
-    st.title("Job Search Engine")
+    st.title("Job Search Engine :level_slider: :zap:")
+    info_text = "Engine that helps you find entry-level jobs [from Linkedin] in Helsinki. This tool is tailored to favor jobs that require none previous work experience. It uses pretrained model: MoritzLaurer/mDeBERTa-v3-base-mnli-xnli with zero-shot classification. The goal of this app is to make it easier to find the first 'Tech' job. Enter a keyword and click 'Search' to get started."
+    st.markdown(f'<div style="font-size: 14px; color: #666; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">{info_text}</div>', unsafe_allow_html=True)
     keyword = st.text_input("Enter the keyword to search for jobs:")
-
     if st.button("Search"):
         st.info("Searching for jobs...")
         job_ids = scrape_job_ids(keyword)
         st.info("Scraping the descriptions...")
         job_details = scrape_job_details(job_ids)
+        st.info(f"Found {len(job_details)} jobs.")
         st.info("Evaluating the data...")
         if job_details:
             job_list = []
             for job in job_details:
                 if "description" in job:
                     description = job["description"]
-                    most_likely_label, classification_output = classify_w_hugging(description)
-                    if most_likely_label == "does not require previous work experience":
+                    output = query({
+                        "inputs": description,
+                        "parameters": {"candidate_labels": ["requires job experience", "does not require previous experience"]}
+                    })
+                    most_likely_label = output["labels"][0]
+                    classification_output = output
+                    if most_likely_label == "does not require previous experience":
                         job_list.append({
                             "job-title": job["job-title"],
                             "URL": job["job-url"],
@@ -116,10 +117,7 @@ if __name__ == "__main__":
             for job in job_list:
                 st.subheader(job["job-title"])
                 st.write("URL:", job["URL"])
-                # If you want to see why it got trought the filter, uncomment these lines
-                # _________________________________________________________________
-                #st.write("Most Likely Label:", job["Most Likely Label"])
-                #st.write("Model Output:", job["Model Output"])
+                st.markdown("---")
             if not job_list:
                 st.warning("No job descriptions found that don't require previous work experience.")
         else:
