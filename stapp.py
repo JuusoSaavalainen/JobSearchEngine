@@ -4,10 +4,6 @@ import streamlit as st
 import requests
 import os
 
-def get_user_input():
-    search_for = input('Enter the keyword to search for jobs: ')
-    return search_for
-
 def scrape_job_ids(keyword):
     job_ids = []
     headers = {
@@ -78,10 +74,7 @@ def query(payload):
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
 
-
-
 def main():
-        
     # Add the background card
     st.markdown("""
         <style>
@@ -95,7 +88,6 @@ def main():
     """, unsafe_allow_html=True)
 
     st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>", unsafe_allow_html=True)
-
 
     # User Input
     keyword = st.text_input("Enter the keyword to search for jobs:")
@@ -116,12 +108,14 @@ def main():
                         description = job["description"]
                         output = query({
                             "inputs": description,
-                            "parameters": {"candidate_labels": ["requires job experience", "does not require previous experience"]}
+                            "parameters": {"candidate_labels": ["requires job experience", "does not require previous experience"]},
+                            "options": {"wait_for_model": True}
                         })
                         if "labels" in output:
                             most_likely_label = output["labels"][0]
                         else:
                             st.write(f"Unexpected keys in output: {output.keys()}")
+                            st.write(f"API error: {output['error']}")
                         classification_output = output
                         if most_likely_label == "does not require previous experience":
                             job_list.append({
