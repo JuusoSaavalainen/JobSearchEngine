@@ -1,5 +1,5 @@
 import pandas as pd
-from cleaner import clean_df
+from cleaner import clean_description
 
 entry_level_keywords = [
     'team', 'role', 'skill', 'opportun', 'support', 'learn', 'intern',
