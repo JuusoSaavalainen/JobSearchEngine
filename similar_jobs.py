@@ -2,7 +2,7 @@ from cleaner import vectorize_description
 import pandas as pd
 
 
-df = pd.read_csv("uniquejobs_clean.csv")
+df = pd.read_csv("data_versions/uniquejobs_clean.csv")
 tfidf_matrix=vectorize_description(df["description"])
 
 

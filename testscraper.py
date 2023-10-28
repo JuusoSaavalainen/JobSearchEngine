@@ -69,7 +69,7 @@ def scrape_job_details(job_ids):
 
 def save_to_csv(data, name):
     df = pd.DataFrame(data)
-    df.to_csv(f'data/{name}.csv', index=False, encoding='utf-8', quoting=csv.QUOTE_ALL)
+    df.to_csv(f'data_crawl/{name}.csv', index=False, encoding='utf-8', quoting=csv.QUOTE_ALL)
 
 if __name__ == "__main__":
     keywords = ["devops", 
