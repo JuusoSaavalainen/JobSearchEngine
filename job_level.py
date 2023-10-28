@@ -39,7 +39,7 @@ def level_score(clean_data: pd.DataFrame) -> list:
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("uniquejobs_clean.csv")
+    df = pd.read_csv("data_versions/uniquejobs_clean.csv")
     df = clean_df(df)
     df = level_score(df)
-    df.to_csv("uniquejobs_clean_entry_level.csv")
+    df.to_csv("data_versions/uniquejobs_clean_entry_level.csv")

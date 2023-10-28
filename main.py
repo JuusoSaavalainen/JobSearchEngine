@@ -4,7 +4,7 @@ import job_level
 
 def load_data() -> pd.DataFrame:
     """Load raw job post data"""
-    df = pd.read_csv("uniquejobs.csv")
+    df = pd.read_csv("data_versions/uniquejobs.csv")
     df.rename(columns={"job-title": "job_title", "job-url": "job_url"}, inplace=True)
     return df
 
@@ -47,4 +47,4 @@ if __name__ == "__main__":
         print(url)
 
     # Optional: print to test output file
-    raw_data.to_csv("TEST_output.csv")
+    #raw_data.to_csv("data_versions/TEST_output.csv")

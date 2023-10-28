@@ -3,7 +3,7 @@ from cleaner import clean_df
 from collections import Counter
 
 
-df = pd.read_csv("uniquejobs_clean.csv")
+df = pd.read_csv("data_versions/uniquejobs_clean.csv")
 df = clean_df(df)
 
 all_keywords = []

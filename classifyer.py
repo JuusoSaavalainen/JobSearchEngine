@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, classification_report
 from imblearn.over_sampling import SMOTE
 
 
-data = pd.read_csv("labelled.csv")
+data = pd.read_csv("data_versions/labelled.csv")
 job_descriptions = data["description"]
 labels = data["label"]
 

@@ -4,7 +4,7 @@ import csv
 
 # Reads all csv files from data folder and merges them into one csv file containing only unique rows
 
-folder_path = 'data/'
+folder_path = 'data_crawl/'
 all_dataframes = []
 
 for filename in os.listdir(folder_path):
@@ -20,4 +20,4 @@ for filename in os.listdir(folder_path):
 
 merged_df = pd.concat(all_dataframes, ignore_index=True)
 merged_df = merged_df.drop_duplicates(subset='description')
-merged_df.to_csv(f'uniquejobs.csv', index=False, encoding='utf-8', quoting=csv.QUOTE_ALL)
+merged_df.to_csv(f'data_versions/uniquejobs.csv', index=False, encoding='utf-8', quoting=csv.QUOTE_ALL)

@@ -72,9 +72,9 @@ def label_dataframe(df: pd.DataFrame):
 
 
 if __name__ == "__main__":
-    df = cleaner.read_csv_relevant_columns_inorder("jobs.csv")
+    df = cleaner.read_csv_relevant_columns_inorder("data_versions/jobs.csv")
     df['description'].fillna('default_value', inplace=True)
     df = cleaner.clean_html_tags_from_dataset(df)
     df = label_dataframe(df)
-    df.to_csv("jobs.csv")
+    df.to_csv("data_versions/jobs.csv")
     

@@ -86,6 +86,6 @@ def read_csv_relevant_columns_inorder(csv_filename: str) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("uniquejobs_clean.csv")
+    df = pd.read_csv("data_versions/uniquejobs_clean.csv")
     clean_description(df)
 
