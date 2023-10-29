@@ -12,5 +12,5 @@ We decided to host demo app that simulates the scraping with static data but oth
 
 If you want to use the scraper to get the realtime joblisting you can do it by running version that includes the scraper locally at your own risk.
 
-## How to run the app locally with scraper
+## How to run the app locally with scraper (and how to setup local api key for huggingface)
 TODO
