@@ -33,7 +33,6 @@ def main():
     """, unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>", unsafe_allow_html=True)
     st.info("This demo app may provide you with an expired link since this version uses static data from linkedin to prevent any issues with scraping. For that reason this app is also limited to fixed size inputs to search for.")
-
     keywords = get_available_keywords_ordered()
     selected_keyword = st.selectbox("Select a keyword:", keywords)
 
@@ -54,7 +53,7 @@ def main():
             random.shuffle(job_list)
             suitable_jobs_found = 0
             if job_list:
-                st.header(f"Realistic {selected_keyword} jobs in Helsinki")
+                st.header(f"Realistic Entry level {selected_keyword} jobs in Helsinki")
                 st.markdown("---")
                 for job in job_list:
                     description = job["Description"]
