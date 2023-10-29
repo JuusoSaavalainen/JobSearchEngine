@@ -8,7 +8,7 @@ import random
 API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
 
 def query(payload):
-    headers = {"Authorization": f"Bearer {st.secrets[API_KEY]}"}
+    headers = {"Authorization": f"Bearer {st.secrets["API_KEY"]}"}
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
 
