@@ -3,6 +3,7 @@ import requests
 import streamlit as st
 import requests
 import os
+import random
 
 def scrape_job_ids(keyword):
     job_ids = []
@@ -30,7 +31,6 @@ def scrape_job_ids(keyword):
             else:
                 print("Job ID element or data-entity-urn attribute not found for this card.")
     return job_ids
-
 
 def scrape_job_details(job_ids):
     jobs = []
@@ -66,7 +66,6 @@ def scrape_job_details(job_ids):
             jobs.append(job)
     return jobs
 
-API_KEY = "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"
 API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
 
 def query(payload):
@@ -126,6 +125,7 @@ def main():
                             })
                         if len(job_list) >= 5:
                             break
+                random.shuffle(job_list)
                 st.header(f"Found these realistic entry-level jobs in Helsinki with keyword: {keyword}")
                 st.markdown("---")
                 for job in job_list:
