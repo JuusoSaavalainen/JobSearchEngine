@@ -32,6 +32,7 @@ def scrape_job_ids(keyword):
                 print("Job ID element or data-entity-urn attribute not found for this card.")
     return job_ids
 
+
 def scrape_job_details(job_ids):
     jobs = []
     target_url = 'https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/{}'
@@ -74,7 +75,6 @@ def query(payload):
     return response.json()
 
 def main():
-    # Add the background card
     st.markdown("""
         <style>
             .reportview-container {
@@ -85,20 +85,13 @@ def main():
             }
         </style>
     """, unsafe_allow_html=True)
-
     st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>", unsafe_allow_html=True)
-
-    # User Input
     keyword = st.text_input("Enter the keyword to search for jobs:")
     if st.button("Search"):
-
-        
         with st.spinner("Searching for jobs..."):
             job_ids = scrape_job_ids(keyword)
-
         with st.spinner("Scraping the job descriptions..."):
-            job_details = scrape_job_details(job_ids)
-            
+            job_details = scrape_job_details(job_ids) 
         with st.spinner("Evaluating the data..."):
             if job_details:
                 job_list = []
@@ -136,6 +129,5 @@ def main():
                     st.warning("No job descriptions found that don't require previous work experience.")
             else:
                 st.warning("No jobs found for the given keyword.")
-            
 if __name__ == "__main__":
     main()

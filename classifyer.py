@@ -19,20 +19,14 @@ smote = SMOTE(sampling_strategy='minority', random_state=42)
 X_resampled, y_resampled = smote.fit_resample(X, labels)
 X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=40)
 
-# Hyperparameter tuning
 param_grid = {
     'n_estimators': [100, 200, 300],
     'max_depth': [None, 10, 20, 30],
 }
 
-# We can change this to random forest classifier if we want or any other model
-# Feel free to tune this and test different models
 model = GradientBoostingClassifier(random_state=42)
-
-# Grid search for hyperparameter tuning
 grid_search = GridSearchCV(model, param_grid, cv=3, n_jobs=-1)
 grid_search.fit(X_train, y_train)
-
 best_model = grid_search.best_estimator_
 print(best_model)
 best_model.fit(X_train, y_train)
