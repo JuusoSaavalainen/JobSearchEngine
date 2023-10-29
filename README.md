@@ -1,7 +1,7 @@
 # Job Search Engine
 Detailed description of this project can be found here: __
 
-We provide demo app hosted with streamlit here: __
+We provide demo app hosted with streamlit [here](https://job-search-engine-demo.streamlit.app/)
 
 For legal and privacy reason that can be found
 [here](https://www.linkedin.com/robots.txt) and
