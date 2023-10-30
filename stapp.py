@@ -70,7 +70,8 @@ def scrape_job_details(job_ids):
 API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
 
 def query(payload):
-    headers = {"Authorization": f"Bearer {API_KEY}"}
+    key = os.environ.get("API_KEY")
+    headers = {"Authorization": f"Bearer {key}"}
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
 
