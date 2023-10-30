@@ -1,5 +1,5 @@
 # Job Search Engine
-Detailed description of this project can be found here: __
+Detailed description of this project in form of a report can be found [here](https://github.com/JuusoSaavalainen/miniprojektiDS/blob/main/miniprojektiDS-1.pdf)
 
 We provide demo app hosted with streamlit [here](https://job-search-engine-demo.streamlit.app/)
 
