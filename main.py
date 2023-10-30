@@ -2,11 +2,14 @@ import pandas as pd
 import search
 import job_level
 
+
 def load_data() -> pd.DataFrame:
     """Load raw job post data"""
     df = pd.read_csv("data_versions/uniquejobs.csv")
-    df.rename(columns={"job-title": "job_title", "job-url": "job_url"}, inplace=True)
+    df.rename(columns={"job-title": "job_title",
+              "job-url": "job_url"}, inplace=True)
     return df
+
 
 def total_score(search_scores: list, level_scores: list) -> list:
     assert len(search_scores) == len(level_scores)
@@ -29,11 +32,12 @@ if __name__ == "__main__":
         max_score = max(scores)
         scores = [x / max_score for x in scores]
         return scores
-    search_scores, level_scores = scale_scores(search_scores), scale_scores(level_scores)
+    search_scores, level_scores = scale_scores(
+        search_scores), scale_scores(level_scores)
 
     # Get total scores
     total_scores = total_score(search_scores, level_scores)
-    
+
     # Sort job ads based on score
     # High score = good; low score = bad
     raw_data["score"] = total_scores
@@ -47,4 +51,4 @@ if __name__ == "__main__":
         print(url)
 
     # Optional: print to test output file
-    #raw_data.to_csv("data_versions/TEST_output.csv")
+    # raw_data.to_csv("data_versions/TEST_output.csv")

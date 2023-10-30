@@ -26,7 +26,8 @@ def description_remove_stopwords(df: pd.DataFrame):
 
 def stem_text(text):
     lang = detect(text)
-    stemmer = SnowballStemmer(lang if lang in SnowballStemmer.languages else "english")
+    stemmer = SnowballStemmer(
+        lang if lang in SnowballStemmer.languages else "english")
     return " ".join([stemmer.stem(word) for word in text.split()])
 
 
@@ -72,8 +73,8 @@ def remove_html_tags(text):
     except Exception as e:
         print(f"An exception occurred: {e}")
         return None
-    
-    
+
+
 def clean_html_tags_from_dataset(df: pd.DataFrame) -> pd.DataFrame:
     df["description"] = df["description"].apply(remove_html_tags)
     df.dropna(subset=['description'], inplace=True)
@@ -81,11 +82,11 @@ def clean_html_tags_from_dataset(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def read_csv_relevant_columns_inorder(csv_filename: str) -> pd.DataFrame:
-    df = pd.read_csv(csv_filename, usecols=['company', 'job-title', 'level', 'description', 'job-url'])
+    df = pd.read_csv(csv_filename, usecols=[
+                     'company', 'job-title', 'level', 'description', 'job-url'])
     return df
 
 
 if __name__ == "__main__":
     df = pd.read_csv("data_versions/uniquejobs_clean.csv")
     clean_description(df)
-

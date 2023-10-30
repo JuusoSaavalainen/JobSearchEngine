@@ -32,7 +32,7 @@ def main():
         </style>
     """, unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>", unsafe_allow_html=True)
-    st.info("This demo app may provide you with an expired link since this version uses static data from linkedin to prevent any issues with scraping. For that reason this app is also limited to fixed size inputs to search for.")
+    st.info("This demo app may provide you with an expired link since this version uses static data to prevent any issues with scraping. For that reason this app is also limited to fixed size inputs to search for.")
     keywords = get_available_keywords_ordered()
     selected_keyword = st.selectbox("Select a keyword:", keywords)
 
@@ -79,3 +79,4 @@ def main():
                 st.warning(f"No matching jobs found for the keyword: {selected_keyword}")
 if __name__ == "__main__":
     main()
+

@@ -20,4 +20,5 @@ for filename in os.listdir(folder_path):
 
 merged_df = pd.concat(all_dataframes, ignore_index=True)
 merged_df = merged_df.drop_duplicates(subset='description')
-merged_df.to_csv(f'data_versions/uniquejobs.csv', index=False, encoding='utf-8', quoting=csv.QUOTE_ALL)
+merged_df.to_csv(f'data_versions/uniquejobs.csv', index=False,
+                 encoding='utf-8', quoting=csv.QUOTE_ALL)

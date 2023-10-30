@@ -17,7 +17,8 @@ X = tfidf_vectorizer.fit_transform(job_descriptions)
 # Oversampling to balance the dataset because 0 is much more common than 1. (0 being realistic and 1 being unrealistic)
 smote = SMOTE(sampling_strategy='minority', random_state=42)
 X_resampled, y_resampled = smote.fit_resample(X, labels)
-X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=40)
+X_train, X_test, y_train, y_test = train_test_split(
+    X_resampled, y_resampled, test_size=0.2, random_state=40)
 
 param_grid = {
     'n_estimators': [100, 200, 300],
@@ -41,5 +42,5 @@ print(f"Accuracy: {accuracy}")
 print(report)
 
 # Save the best model
-#model_filename = "best_model.pkl"
-#joblib.dump(best_model, model_filename)
+# model_filename = "best_model.pkl"
+# joblib.dump(best_model, model_filename)

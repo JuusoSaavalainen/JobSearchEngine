@@ -5,6 +5,7 @@ import requests
 import os
 import random
 
+
 def scrape_job_ids(keyword):
     job_ids = []
     headers = {
@@ -20,7 +21,8 @@ def scrape_job_ids(keyword):
         job_cards = soup.find_all("li")
         for card in job_cards:
             try:
-                job_id = card.find("div", {"class": "base-card"}).get('data-entity-urn').split(":")[3]
+                job_id = card.find(
+                    "div", {"class": "base-card"}).get('data-entity-urn').split(":")[3]
                 job_id_element = card.find("div", {"class": "base-card"})
             except:
                 return "Error in scraping the urn"
@@ -29,7 +31,8 @@ def scrape_job_ids(keyword):
                 job_id = job_entity_urn.split(":")[3]
                 job_ids.append(job_id)
             else:
-                print("Job ID element or data-entity-urn attribute not found for this card.")
+                print(
+                    "Job ID element or data-entity-urn attribute not found for this card.")
     return job_ids
 
 
@@ -42,24 +45,29 @@ def scrape_job_details(job_ids):
         soup = BeautifulSoup(response.text, 'html.parser')
         job = {}
         try:
-            job["company"] = soup.find("div", {"class": "top-card-layout__card"}).find("a").find("img").get('alt')
+            job["company"] = soup.find(
+                "div", {"class": "top-card-layout__card"}).find("a").find("img").get('alt')
         except:
             job["company"] = None
         try:
-            job["job-title"] = soup.find("div", {"class": "top-card-layout__entity-info"}).find("a").text.strip()
+            job["job-title"] = soup.find(
+                "div", {"class": "top-card-layout__entity-info"}).find("a").text.strip()
         except:
             job["job-title"] = None
         try:
-            job["level"] = soup.find("ul", {"class": "description__job-criteria-list"}).find("li").text.replace("Seniority level", "").strip()
+            job["level"] = soup.find("ul", {"class": "description__job-criteria-list"}).find(
+                "li").text.replace("Seniority level", "").strip()
         except:
             job["level"] = None
         try:
-            job["description"] = soup.find("div", {"class": "show-more-less-html__markup"}).text.strip()
+            job["description"] = soup.find(
+                "div", {"class": "show-more-less-html__markup"}).text.strip()
         except:
             job["description"] = None
         try:
-            job_url = soup.find("div", {"class": "top-card-layout__entity-info"}).find("a").get("href")
-            job_url = job_url.split('?')[0] 
+            job_url = soup.find(
+                "div", {"class": "top-card-layout__entity-info"}).find("a").get("href")
+            job_url = job_url.split('?')[0]
             job["job-url"] = job_url
         except:
             job["job-url"] = None
@@ -67,13 +75,16 @@ def scrape_job_details(job_ids):
             jobs.append(job)
     return jobs
 
+
 API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
+
 
 def query(payload):
     key = os.environ.get("API_KEY")
     headers = {"Authorization": f"Bearer {key}"}
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
+
 
 def main():
     st.markdown("""
@@ -86,13 +97,14 @@ def main():
             }
         </style>
     """, unsafe_allow_html=True)
-    st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>",
+                unsafe_allow_html=True)
     keyword = st.text_input("Enter the keyword to search for jobs:")
     if st.button("Search"):
         with st.spinner("Searching for jobs..."):
             job_ids = scrape_job_ids(keyword)
         with st.spinner("Scraping the job descriptions..."):
-            job_details = scrape_job_details(job_ids) 
+            job_details = scrape_job_details(job_ids)
         with st.spinner("Evaluating the data..."):
             if job_details:
                 job_list = []
@@ -107,7 +119,8 @@ def main():
                         if "labels" in output:
                             most_likely_label = output["labels"][0]
                         else:
-                            st.write(f"Unexpected keys in output: {output.keys()}")
+                            st.write(
+                                f"Unexpected keys in output: {output.keys()}")
                             st.write(f"API error: {output['error']}")
                         classification_output = output
                         if most_likely_label == "does not require previous experience":
@@ -120,15 +133,19 @@ def main():
                         if len(job_list) >= 5:
                             break
                 random.shuffle(job_list)
-                st.header(f"Found these realistic entry-level jobs in Helsinki with keyword: {keyword}")
+                st.header(
+                    f"Found these realistic entry-level jobs in Helsinki with keyword: {keyword}")
                 st.markdown("---")
                 for job in job_list:
                     st.subheader(job["job-title"])
                     st.write("URL:", job["URL"])
                     st.markdown("---")
                 if not job_list:
-                    st.warning("No job descriptions found that don't require previous work experience.")
+                    st.warning(
+                        "No job descriptions found that don't require previous work experience.")
             else:
                 st.warning("No jobs found for the given keyword.")
+
+
 if __name__ == "__main__":
     main()

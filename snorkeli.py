@@ -65,9 +65,11 @@ def label_dataframe(df: pd.DataFrame):
     applier = PandasLFApplier([is_realistic_entry_level])
     df = df.drop_duplicates(subset="description", keep='first')
     L_train = applier.apply(df)
-    df.loc[:,"description-label"] = L_train
-    df.loc[:,'level-label'] = df.apply(lambda row: 1 if row['level'] in ['entry-level','Entry Level', 'internship', 'Not Applicable'] else 0, axis=1)
-    df.loc[:,'label'] = df.apply(lambda row: row['level-label'] if row['level-label'] == 1 else row['description-label'], axis=1)
+    df.loc[:, "description-label"] = L_train
+    df.loc[:, 'level-label'] = df.apply(lambda row: 1 if row['level'] in [
+                                        'entry-level', 'Entry Level', 'internship', 'Not Applicable'] else 0, axis=1)
+    df.loc[:, 'label'] = df.apply(lambda row: row['level-label']
+                                  if row['level-label'] == 1 else row['description-label'], axis=1)
     return df
 
 
@@ -77,4 +79,3 @@ if __name__ == "__main__":
     df = cleaner.clean_html_tags_from_dataset(df)
     df = label_dataframe(df)
     df.to_csv("data_versions/jobs.csv")
-    

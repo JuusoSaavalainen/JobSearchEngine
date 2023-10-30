@@ -8,7 +8,7 @@ entry_level_keywords = [
     'client', 'remot', 'respons', 'educ', 'custom', 'posit', 'commun',
     'compani', 'process', 'hour', 'report', 'includ', 'provid', 'full',
     'coordin', 'work', 'retail', 'staff', 'solut', 'build', 'creat',
-    'organ', 'time', 'admin', 'market', 'softwar', 'part', 'busi', 'individu','user'
+    'organ', 'time', 'admin', 'market', 'softwar', 'part', 'busi', 'individu', 'user'
 ]
 nonentry_level_keywords = [
     'senior', 'expert', 'manag', 'lead', 'architect', 'strategi', 'consult',
@@ -33,7 +33,8 @@ def calculate_entry_levelness(text):
 
 def level_score(clean_data: pd.DataFrame) -> list:
     """Compute 'entry levelness' scores for each job post in raw_data"""
-    clean_data['entry_level_score'] = clean_data['description'].apply(calculate_entry_levelness)
+    clean_data['entry_level_score'] = clean_data['description'].apply(
+        calculate_entry_levelness)
     sorted_df = clean_data.sort_values(by='entry_level_score', ascending=False)
     return sorted_df
 
