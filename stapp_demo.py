@@ -97,6 +97,7 @@ def main():
                             </div>
                             """, unsafe_allow_html=True)
                             st.markdown("<br>", unsafe_allow_html=True)
+                            suitable_jobs_found += 1
                         if suitable_jobs_found >= 5 or suitable_jobs_found == len(job_list):
                             break
                     else:
