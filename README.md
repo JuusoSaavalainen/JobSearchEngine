@@ -6,7 +6,7 @@ Welcome to the Entry Level Job Search Engine, a powerful tool designed to assist
 
 The Entry Level Job Search Engine is created to address a common challenge faced by newcomers to the tech industry - finding job opportunities that do not demand prior work experience. Our project focuses on simplifying this process for entry-level job seekers by using natural language processing and machine learning techniques.
 
-Detailed description of this project in form of a report can be found [here](https://github.com/JuusoSaavalainen/miniprojektiDS/blob/main/miniprojektiDS-1.pdf)
+Detailed description of this project in form of a report can be found [here](https://github.com/JuusoSaavalainen/miniprojektiDS/blob/main/miniprojektiDS.pdf)
 
 ## How To Use
 We provide demo app hosted with streamlit [here](https://job-search-engine-demo.streamlit.app/)
