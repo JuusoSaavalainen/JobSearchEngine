@@ -80,8 +80,7 @@ API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/mDeBERTa-v3-
 
 
 def query(payload):
-    key = "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"
-    #os.environ.get("API_KEY")
+    key = os.environ.get("API_KEY")
     headers = {"Authorization": f"Bearer {key}"}
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
