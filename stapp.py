@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 import streamlit as st
-import requests
 import os
 import random
 
@@ -15,7 +14,6 @@ def scrape_job_ids(keyword):
     # hardcoded 5 page max
     for page_number in range(5):
         url = base_url.format(keyword, page_number * 25)
-        response = requests.get(url)
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.text, 'html.parser')
         job_cards = soup.find_all("li")
@@ -62,6 +60,8 @@ def scrape_job_details(job_ids):
         try:
             job["description"] = soup.find(
                 "div", {"class": "show-more-less-html__markup"}).text.strip()
+            #description_div = soup.find("div", {"class": "show-more-less-html__markup"})
+            #job["job-details"] = BeautifulSoup(description_div, 'html.parser').prettify()
         except:
             job["description"] = None
         try:
@@ -80,7 +80,8 @@ API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/mDeBERTa-v3-
 
 
 def query(payload):
-    key = os.environ.get("API_KEY")
+    key = "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"
+    #os.environ.get("API_KEY")
     headers = {"Authorization": f"Bearer {key}"}
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
@@ -90,11 +91,30 @@ def main():
     st.markdown("""
         <style>
             .reportview-container {
-                background-color: #f0f0f0; 
-                padding: 15px;
-                border-radius: 10px;
-                box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
+                background-color: linear-gradient(135deg, #f5f5f5, #e0e0e0); 
+                padding: 20px 15px;
+                border-radius: 12px;
+                box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.15);
             }
+            .reportview-container:hover {
+                transform: translateY(-2px); 
+                box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.25), 0 8px 24px 0 rgba(0, 0, 0, 0.2); 
+            }
+            .title {
+                color: black;
+                font-family: 'Arial', sans-serif; 
+                font-size: 18px;  
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 90%;  
+                margin-top: 8px;
+                margin-bottom: 4px;
+                transition: color 0.3s ease;
+                }
+            .title:hover {
+                color: #555; 
+                }
         </style>
     """, unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>",
@@ -117,29 +137,40 @@ def main():
                             "options": {"wait_for_model": True}
                         })
                         if "labels" in output:
-                            most_likely_label = output["labels"][0]
+                            classification_output = output
+                            most_likely_label = output["labels"][0] 
+                            if most_likely_label == "does not require previous experience":
+                                job_list.append({
+                                    "job-title": job["job-title"],
+                                    "URL": job["job-url"],
+                                    "description": job["description"],
+                                    "Most Likely Label": most_likely_label,
+                                    "Model Output": classification_output
+                                })
                         else:
-                            st.write(
-                                f"Unexpected keys in output: {output.keys()}")
-                            st.write(f"API error: {output['error']}")
-                        classification_output = output
-                        if most_likely_label == "does not require previous experience":
-                            job_list.append({
-                                "job-title": job["job-title"],
-                                "URL": job["job-url"],
-                                "Most Likely Label": most_likely_label,
-                                "Model Output": classification_output
-                            })
+                            st.error(f"Unexpected keys in output: {output.keys()} \n API error: {output['error']}")
+                            break
                         if len(job_list) >= 5:
                             break
                 random.shuffle(job_list)
                 st.header(
                     f"Found these realistic entry-level jobs in Helsinki with keyword: {keyword}")
-                st.markdown("---")
+                st.markdown("---")    
                 for job in job_list:
-                    st.subheader(job["job-title"])
-                    st.write("URL:", job["URL"])
-                    st.markdown("---")
+                    job_title = job["job-title"]
+                    job_url = job["URL"]
+                    job_details = job["description"]
+                    st.markdown(
+                        f"""
+                        <div class="reportview-container">
+                            <a href="{job_url}" target="_blank">
+                                <div class="title">{job_title}</div>
+                            </a>
+                            <details>{job_details}
+                            </details>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    st.markdown("<br>", unsafe_allow_html=True)
                 if not job_list:
                     st.warning(
                         "No job descriptions found that don't require previous work experience.")

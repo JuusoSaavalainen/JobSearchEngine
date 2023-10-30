@@ -24,11 +24,30 @@ def main():
     st.markdown("""
         <style>
             .reportview-container {
-                background-color: #f0f0f0; 
-                padding: 15px;
-                border-radius: 10px;
-                box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
+                background-color: linear-gradient(135deg, #f5f5f5, #e0e0e0); 
+                padding: 20px 15px;
+                border-radius: 12px;
+                box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.15);
             }
+            .reportview-container:hover {
+                transform: translateY(-2px); 
+                box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.25), 0 8px 24px 0 rgba(0, 0, 0, 0.2); 
+            }
+            .title {
+                color: black;
+                font-family: 'Arial', sans-serif; 
+                font-size: 18px;  
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 90%;  
+                margin-top: 8px;
+                margin-bottom: 4px;
+                transition: color 0.3s ease;
+                }
+            .title:hover {
+                color: #555; 
+                }
         </style>
     """, unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center;'>Job Search Engine</h1>", unsafe_allow_html=True)
@@ -64,15 +83,25 @@ def main():
                     })
                     if "labels" in output:
                         most_likely_label = output["labels"][0]
+                        if most_likely_label == "does not require previous experience":
+                            job_title = job["job-title"]
+                            job_url = job["URL"]
+                            st.markdown(
+                            f"""
+                            <div class="reportview-container">
+                                <a href="{job_url}" target="_blank">
+                                    <div class="title">{job_title}</div>
+                                </a>
+                                <details>{description}
+                                </details>
+                            </div>
+                            """, unsafe_allow_html=True)
+                            st.markdown("<br>", unsafe_allow_html=True)
                     else:
                         st.write(f"Unexpected keys in output: {output.keys()}")
                         st.write(f"API error: {output['error']}")
                         most_likely_label = "Error"
-                    if most_likely_label == "does not require previous experience":
-                        st.subheader(job["job-title"])
-                        st.write("URL:", job["URL"])
-                        st.markdown("---")
-                        suitable_jobs_found += 1
+                    
                     if suitable_jobs_found >= 5 or suitable_jobs_found == len(job_list):
                         break
             if not any(job_list):
