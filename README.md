@@ -1,6 +1,14 @@
 # Job Search Engine
-Detailed description of this project can be found here: __
 
+Welcome to the Entry Level Job Search Engine, a powerful tool designed to assist entry-level tech job seekers in finding opportunities that do not require previous work experience in the field. This project leverages data from LinkedIn and employs language models from Hugging Face to provide you with tailored job posts that match your skills and aspirations.
+
+## What is This Project About?
+
+The Entry Level Job Search Engine is created to address a common challenge faced by newcomers to the tech industry - finding job opportunities that do not demand prior work experience. Our project focuses on simplifying this process for entry-level job seekers by using natural language processing and machine learning techniques.
+
+Detailed description of this project in form of a report can be found [here](https://github.com/JuusoSaavalainen/miniprojektiDS/blob/main/miniprojektiDS-1.pdf)
+
+## How To Use
 We provide demo app hosted with streamlit [here](https://job-search-engine-demo.streamlit.app/)
 
 For legal and privacy reason that can be found
