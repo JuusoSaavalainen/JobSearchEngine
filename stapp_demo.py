@@ -97,13 +97,12 @@ def main():
                             </div>
                             """, unsafe_allow_html=True)
                             st.markdown("<br>", unsafe_allow_html=True)
+                        if suitable_jobs_found >= 5 or suitable_jobs_found == len(job_list):
+                            break
                     else:
                         st.write(f"Unexpected keys in output: {output.keys()}")
                         st.write(f"API error: {output['error']}")
                         most_likely_label = "Error"
-                    
-                    if suitable_jobs_found >= 5 or suitable_jobs_found == len(job_list):
-                        break
             if not any(job_list):
                 st.warning(f"No matching jobs found for the keyword: {selected_keyword}")
 if __name__ == "__main__":
