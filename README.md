@@ -1,4 +1,4 @@
-# Job Search Engine
+# Job Search Engine :earth_americas:
 
 Welcome to the Entry Level Job Search Engine, a powerful tool designed to assist entry-level tech job seekers in finding opportunities that do not require previous work experience in the field. This project leverages data from LinkedIn and employs NLI from Hugging Face to provide you with tailored job posts that match your skills and aspirations.
 
